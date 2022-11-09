@@ -14,7 +14,7 @@
 // var pm5El = $("#hour-17");
 
 var buttons = $(".saveBtn");
-// var events = [];
+var events = [];
 
 // card colors: past, present, future
 
@@ -26,23 +26,37 @@ $(function () {
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
   buttons.on("click", saveEvent);
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
 
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  $(".row").each(function () {
-    if() {
-      
+  // Determin the color of the block relative to the current hour
+  $(".time-block").each(function () {
+    // gets the hour of the block using its id -> .each(element.ID)
+    var blockHour = this.id.split("-").pop();
+    var currentHour = dayjs().hour();
+    // compare current hour to the block and color accordingly
+    // remove any color classes befor adding one
+
+    $(this).removeClass("past");
+    $(this).removeClass("present");
+    $(this).removeClass("future");
+    if (currentHour > blockHour) {
+      $(this).addClass("past");
+      console.log("past");
+    } else if (currentHour === blockHour) {
+      $(this).addClass("present");
+    } else {
+      // currentHour > blockHour
+      $(this).addClass("future");
     }
-    var lastEvent = JSON.parse(localStorage.getItem($(this).attr("id")));
-    console.log(lastEvent.eventID);
+  });
+
+  $(".time-block").each(function () {
+    var blockID = $(this).attr("id");
+    if (localStorage.getItem(blockID)) {
+      var localText = localStorage.getItem(blockID);
+      $(this).children().eq(1).text(localText);
+      // console.log(localStorage.getItem(blockID));
+    }
+    // console.log($(this).attr("id"));
   });
   //
   // TODO: Add code to display the current date in the header of the page.
@@ -53,13 +67,6 @@ var saveEvent = function (event) {
   // get id and text
   var id = $(this).parent().attr("id");
   var text = $(this).parent().children("textarea").val();
-  // make object
-  var event = {
-    eventID: id,
-    eventText: text,
-  };
-  // push object to events[]
-  // events.push(event);
-  // local storage
-  localStorage.setItem(id, JSON.stringify(event));
+  console.log($(this).parent().attr("id"));
+  localStorage.setItem(id, text);
 };
