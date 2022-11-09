@@ -10,13 +10,12 @@ $(function () {
     var blockHour = this.id.split("-").pop();
     var currentHour = dayjs().hour();
     // compare current hour to the block and color accordingly
-    // remove any color classes befor adding one
+    // remove any color classes before adding one
     $(this).removeClass("past");
     $(this).removeClass("present");
     $(this).removeClass("future");
     if (currentHour > blockHour) {
       $(this).addClass("past");
-      console.log("past");
     } else if (currentHour === blockHour) {
       $(this).addClass("present");
     } else {
@@ -25,14 +24,17 @@ $(function () {
     }
   });
 
-  $(".time-block").each(function () {
-    var blockID = $(this).attr("id");
+  // For each description(1 description per time-block)
+  $(".description").each(function () {
+    // store the time-block ID
+    var blockID = $(this).parent().attr("id");
+    // If the ID exists in local storage, display the text
     if (localStorage.getItem(blockID)) {
       var localText = localStorage.getItem(blockID);
-      $(this).children().eq(1).text(localText);
-      console.log(localStorage.getItem(blockID));
+      $(this).val(localText);
+      // console.log(localStorage.getItem(blockID));
     }
-    console.log($(this).attr("id"));
+    // console.log($(this).attr("id"));
   });
 
   // Display the current date in the header of the page.
@@ -51,6 +53,6 @@ var saveEvent = function (event) {
   // get id and text
   var id = $(this).parent().attr("id");
   var text = $(this).parent().children("textarea").val();
-  console.log($(this).parent().attr("id"));
+  // console.log($(this).parent().attr("id"));
   localStorage.setItem(id, text);
 };
